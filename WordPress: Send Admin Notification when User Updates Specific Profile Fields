@@ -1,0 +1,130 @@
+<?php
+
+// Exit if accessed directly
+if( !defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/* ==========================================================
+    Send Emails when User Profile Changes from the Front Ent
+   ========================================================== */
+ 
+// IF EMAIL CHANGES
+function wv_user_profile_update_email( $user_id, $old_user_data ) {
+ 
+  $user = get_userdata( $user_id );
+  if($old_user_data->user_email != $user->user_email) {
+    $admin_email = "tejasbusiness@gmail.com";
+    $message = sprintf( __( 'This user has updated their profile on the CINTAA website.' ) ) . "\r\n\r\n";
+	$message .= sprintf( __( 'Member ID: %s' ), $user->webv_member_id ). "\r\n\r\n";
+    $message .= sprintf( __( 'Member Name: %s' ), $user->display_name ). "\r\n\r\n";
+//    $message .= sprintf( __( 'Old Email: %s' ), $old_user_data->user_email ). "\r\n\r\n";
+    $message .= sprintf( __( 'New Email: %s' ), $user->user_email ). "\r\n\r\n";
+    wp_mail( $admin_email, sprintf( __( '[CINTAA website] User Profile Update' ), get_option('blogname') ), $message );
+  }
+ 
+}
+ 
+add_action( 'profile_update', 'wv_user_profile_update_email', 10, 2 );
+ 
+// IF PRIMARY PHONE NUMBER CHANGES
+function wv_user_profile_update_primary_phone( $user_id, $old_user_data ) {
+ 
+  $old_user_data = get_transient( 'wv_old_user_data_' . $user_id );
+  $user = get_userdata( $user_id );
+ 
+  if($old_user_data->bphone != $user->bphone) {
+    $admin_email = "tejasbusiness@gmail.com";
+    $message = sprintf( __( 'This user has updated their profile on the CINTAA website.' ) ) . "\r\n\r\n";
+	$message .= sprintf( __( 'Member ID: %s' ), $user->webv_member_id ). "\r\n\r\n";
+    $message .= sprintf( __( 'Member Name: %s' ), $user->display_name ). "\r\n\r\n";
+//    $message .= sprintf( __( 'Old Phone: %s' ), $old_user_data->bphone ). "\r\n\r\n";
+    $message .= sprintf( __( 'New Phone: %s' ), $user->bphone ). "\r\n\r\n";
+    wp_mail( $admin_email, sprintf( __( '[CINTAA website] User Profile Update' ), get_option('blogname') ), $message );
+  }
+ 
+}
+ 
+add_action( 'profile_update', 'wv_user_profile_update_primary_phone', 10, 2 );
+
+// IF EMERGENCY PHONE NUMBER CHANGES
+/* function wv_user_profile_update_emergency_phone( $user_id, $old_user_data ) {
+ 
+  $old_user_data = get_transient( 'wv_old_user_data_' . $user_id );
+  $user = get_userdata( $user_id );
+ 
+  if($old_user_data->emergency_phone != $user->emergency_phone) {
+    $admin_email = "tejasbusiness@gmail.com";
+    $message = sprintf( __( 'This user has updated their profile on the CINTAA website.' ) ) . "\r\n\r\n";
+	$message .= sprintf( __( 'Member ID: %s' ), $user->webv_member_id ). "\r\n\r\n";
+    $message .= sprintf( __( 'Member Name: %s' ), $user->display_name ). "\r\n\r\n";
+    $message .= sprintf( __( 'Old Emergeny Phone: %s' ), $old_user_data->emergency_phone ). "\r\n\r\n";
+    $message .= sprintf( __( 'New Emergency Phone: %s' ), $user->emergency_phone ). "\r\n\r\n";
+    wp_mail( $admin_email, sprintf( __( '[CINTAA website] User Profile Update' ), get_option('blogname') ), $message );
+  }
+ 
+}
+ 
+add_action( 'profile_update', 'wv_user_profile_update_emergency_phone', 10, 2 ); */
+
+// IF ALTERNATE PHONE NUMBER CHANGES
+/* function wv_user_profile_update_alternate_phone( $user_id, $old_user_data ) {
+ 
+  $old_user_data = get_transient( 'wv_old_user_data_' . $user_id );
+  $user = get_userdata( $user_id );
+ 
+  if($old_user_data->alternate_phone != $user->alternate_phone) {
+    $admin_email = "tejasbusiness@gmail.com";
+    $message = sprintf( __( 'This user has updated their profile on the CINTAA website.' ) ) . "\r\n\r\n";
+	$message .= sprintf( __( 'Member ID: %s' ), $user->webv_member_id ). "\r\n\r\n";
+    $message .= sprintf( __( 'Member Name: %s' ), $user->display_name ). "\r\n\r\n";
+    $message .= sprintf( __( 'Old Alternate Phone: %s' ), $old_user_data->alternate_phone ). "\r\n\r\n";
+    $message .= sprintf( __( 'New Alternate Phone: %s' ), $user->alternate_phone ). "\r\n\r\n";
+    wp_mail( $admin_email, sprintf( __( '[CINTAA website] User Profile Update' ), get_option('blogname') ), $message );
+  }
+ 
+}
+ 
+add_action( 'profile_update', 'wv_user_profile_update_alternate_phone', 10, 2 ); */
+ 
+// IF ADDRESS CHANGES
+/* function wv_user_profile_update_address( $user_id, $old_user_data ) {
+ 
+  $old_user_data = get_transient( 'wv_old_user_data_' . $user_id );
+  $user = get_userdata( $user_id );
+ 
+  if($old_user_data->street != $user->street or $old_user_data->city != $user->city or $old_user_data->state != $user->state or $old_user_data->zip != $user->zip) {
+ 
+    $admin_email = "you@yourdomain.com";
+    $message = sprintf( __( 'This user has updated their profile on the SchoolRise USA Staff Member site.' ) ) . "\r\n\r\n";
+    $message .= sprintf( __( 'Display Name: %s' ), $user->display_name ). "\r\n\r\n";
+    $message .= sprintf( __( 'Old Address: %s, %s, %s %s' ), $old_user_data->street, $old_user_data->city, $old_user_data->state, $old_user_data->zip ). "\r\n\r\n";
+    $message .= sprintf( __( 'New Address: %s, %s, %s %s' ), $user->street, $user->city, $user->state, $user->zip ). "\r\n\r\n";
+    wp_mail( $admin_email, sprintf( __( '[Staff Member Site] User Profile Update' ), get_option('blogname') ), $message );
+  }
+ 
+}
+ 
+add_action( 'profile_update', 'wv_user_profile_update_address', 10, 2 ); */
+ 
+// Save old user data and meta for later comparison for non-standard fields (phone, address etc.)
+function wv_old_user_data_transient(){
+ 
+  $user_id = get_current_user_id();
+  $user_data = get_userdata( $user_id );
+  $user_meta = get_user_meta( $user_id );
+ 
+  foreach( $user_meta as $key=>$val ){
+    $user_data->data->$key = current($val);
+  }
+ 
+  // 1 hour should be sufficient
+  set_transient( 'wv_old_user_data_' . $user_id, $user_data->data, 60 * 60 );
+}
+add_action('show_user_profile', 'wv_old_user_data_transient');
+ 
+// Cleanup when done
+function wv_old_user_data_cleanup( $user_id, $old_user_data ){
+  delete_transient( 'wv_old_user_data_' . $user_id );
+}
+add_action( 'profile_update', 'wv_old_user_data_cleanup', 1000, 2 );
